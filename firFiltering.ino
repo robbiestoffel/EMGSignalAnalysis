@@ -1,4 +1,5 @@
 #include "MAFilter.h"
+#include "snr.h"
 // #include "FIRFilter.h"
 
 MAFilter barFilterMovingAverage;
