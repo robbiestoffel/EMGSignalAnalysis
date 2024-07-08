@@ -1,0 +1,8 @@
+#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\.vscode\\arduino.json"
+{
+    "configuration": "cpu=atmega2560",
+    "board": "arduino:avr:mega",
+    "sketch": "firFiltering.ino",
+    "port": "COM4",
+    "output": "./build"
+}
