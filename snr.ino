@@ -14,6 +14,16 @@ void SNR_Init(SNR) {
   SNR->out = 0.0f;
 }
 
-float SNR_Calculate
+float SNR_Calculate(SNR, float data) {
+
+  // temp buffer the data
+
+  // used the currently buffered data to calculate P_signal
+
+  // import in P_noise and use both values to calculate SNR
+
+  // log SNR values, and buffer snr elsewhere to be averaged later?
+
+}
 
 float SNR
