@@ -1,3 +1,4 @@
+#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\snr.h"
 /* Header Code + Definitions (I think??) */
 
 #ifndef SNR_H
@@ -19,9 +20,9 @@ typedef struct {
   uint8_t bufIndex;
 
   float out;
-} SNRCalculator;
+} SNR;
 
-void SNR_Init(SNRCalculator *SNR);
-float SNR_Calculate(SNRCalculator *SNR, float data);
+void SNR_Init(SNR)
+void SNR_Calculate(SNR, float data)
 
-#endif
+#endef

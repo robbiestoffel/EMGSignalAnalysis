@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #line 1 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
 #include "MAFilter.h"
+#include "snr.h"
 // #include "FIRFilter.h"
 
 MAFilter barFilterMovingAverage;
@@ -13,15 +14,6 @@ const int pin = A0;
 int val = 0;
 const int outpin = A1;
 
-#line 14 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
-void setup();
-#line 25 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
-void loop();
-#line 5 "C:\\Users\\robbi\\repos\\firFiltering\\MAFilter.ino"
-void MAFilter_Init(MAFilter *MA);
-#line 19 "C:\\Users\\robbi\\repos\\firFiltering\\MAFilter.ino"
-float MAFilter_Update(MAFilter *MA, float inp);
-#line 14 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
 void setup()
 {
   MAFilter_Init(&barFilterMovingAverage);
@@ -111,3 +103,33 @@ float MAFilter_Update(MAFilter *MA, float inp) {
 
   return MA->out;
 }
+#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\snr.ino"
+#include "snr.h"
+
+void SNR_Init(SNR) {
+
+  /* Clear filter buffer */
+  for (uint8_t n = 0; n < SNR_Time_Interval; n++) {
+    SNR->buf[n] = 0.0f;
+  }
+
+  /* Reset buffer index */
+  SNR->bufIndex = 0;
+
+  /* Clear filter output */
+  SNR->out = 0.0f;
+}
+
+float SNR_Calculate(SNR, float data) {
+
+  // temp buffer the data
+
+  // used the currently buffered data to calculate P_signal
+
+  // import in P_noise and use both values to calculate SNR
+
+  // log SNR values, and buffer snr elsewhere to be averaged later?
+
+}
+
+float SNR

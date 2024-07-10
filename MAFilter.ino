@@ -28,7 +28,7 @@ float MAFilter_Update(MAFilter *MA, float inp) {
     MA->bufIndex = 0;
   }
 
-  /* Compute new output sampe (via convolution) */
+  /* Compute new output sample (via convolution) */
   MA->out = 0.0f;
 
   uint8_t sumIndex = MA->bufIndex;
