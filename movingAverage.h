@@ -1,14 +1,14 @@
 /* Header Code + Definitions */
 
-#ifndef MA_FILTER_H
-#define MA_FILTER_H
+#ifndef movingAverage_H
+#define movingAverage_H
 
 #include <stdint.h>
 
-#define MA_FILTER_LENGTH 10
+#define movingAverage_LENGTH 10
 
 typedef struct {
-  float buf[MA_FILTER_LENGTH];
+  float buf[movingAverage_LENGTH];
   uint8_t bufIndex;
 
   float out;

@@ -1,7 +1,6 @@
-#include <Arduino.h>
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
-#include "movingAverage.h"
-#include "movingMaximum.h"
+# 1 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
+# 2 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino" 2
+# 3 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino" 2
 // #include "snr.h"
 // #include "FIRFilter.h"
 
@@ -15,19 +14,6 @@ MMFilter filterMovingMax;
 
 const int pin = A0;
 
-#line 16 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
-void setup();
-#line 29 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
-void loop();
-#line 5 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino"
-void MAFilter_Init(MAFilter *MA);
-#line 19 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino"
-float MAFilter_Update(MAFilter *MA, float inp);
-#line 3 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino"
-void MMFilter_Init(MMFilter *MM);
-#line 17 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino"
-float MMFilter_Update(MMFilter *MM, float inp);
-#line 16 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
 void setup()
 {
   MAFilter_Init(&barFilterMovingAverage);
@@ -62,16 +48,15 @@ void loop()
   Serial.print(",");
   Serial.println(filterMovingMax.out);
 }
+# 1 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino"
+# 2 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino" 2
 
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino"
-#include "movingAverage.h"
-
-static float MA_IMPULSE_RESPONSE[movingAverage_LENGTH] = {0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
+static float MA_IMPULSE_RESPONSE[10] = {0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
 
 void MAFilter_Init(MAFilter *MA) {
 
   /* Clear filter buffer */
-  for (uint8_t n = 0; n < movingAverage_LENGTH; n++) {
+  for (uint8_t n = 0; n < 10; n++) {
     MA->buf[n] = 0.0f;
   }
 
@@ -90,7 +75,7 @@ float MAFilter_Update(MAFilter *MA, float inp) {
   /* Increment buffer index and wrap around if necessary */
   MA->bufIndex++;
 
-  if (MA->bufIndex == movingAverage_LENGTH) {
+  if (MA->bufIndex == 10) {
     MA->bufIndex = 0;
   }
 
@@ -99,13 +84,13 @@ float MAFilter_Update(MAFilter *MA, float inp) {
 
   uint8_t sumIndex = MA->bufIndex;
 
-  for (uint8_t n = 0; n < movingAverage_LENGTH; n++) {
+  for (uint8_t n = 0; n < 10; n++) {
 
     /* Decrease index and wrap if necessary */
     if (sumIndex > 0) {
       sumIndex--;
     } else {
-      sumIndex = movingAverage_LENGTH - 1;
+      sumIndex = 10 - 1;
     }
 
     /* Multiply impulse response with shifted input sample and add to output */
@@ -117,13 +102,13 @@ float MAFilter_Update(MAFilter *MA, float inp) {
 
   return MA->out;
 }
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino"
-#include "movingMaximum.h"
+# 1 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino"
+# 2 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino" 2
 
 void MMFilter_Init(MMFilter *MM) {
 
   /* Clear filter buffer */
-  for (uint8_t n = 0; n < movingMaximum_LENGTH; n++) {
+  for (uint8_t n = 0; n < 16; n++) {
     MM->buf[n] = 0.0f;
   }
 
@@ -142,14 +127,14 @@ float MMFilter_Update(MMFilter *MM, float inp) {
   /* Increment buffer index and wrap around if necessary */
   MM->bufIndex++;
 
-  if (MM->bufIndex == movingMaximum_LENGTH) {
+  if (MM->bufIndex == 16) {
     MM->bufIndex = 0;
   }
 
   /* Compute new output sample */
   MM->out = 0.0f;
 
-  for (int m = 0 ; m < movingMaximum_LENGTH ; m++)
+  for (int m = 0 ; m < 16 ; m++)
   {
     if (MM->buf[m] > MM->out)
     {
@@ -161,7 +146,7 @@ float MMFilter_Update(MMFilter *MM, float inp) {
 
   return MM->out;
 }
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\snr.ino"
+# 1 "C:\\Users\\robbi\\repos\\firFiltering\\snr.ino"
 // #include "snr.h"
 
 // // add necessary variables for calculation
