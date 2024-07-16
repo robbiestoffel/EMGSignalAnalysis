@@ -1,4 +1,4 @@
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\snr.h"
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\snr.h"
 // /* Header Code + Definitions (I think??) */
 
 // #ifndef SNR_H

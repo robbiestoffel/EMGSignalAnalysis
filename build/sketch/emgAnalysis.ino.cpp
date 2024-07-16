@@ -1,5 +1,56 @@
 #include <Arduino.h>
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
+#line 3 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
+void Buffer_Init(Buffer *B);
+#line 18 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
+void Buffer_Update(Buffer *B, float data);
+#line 16 "C:\\Users\\robbi\\repos\\emgAnalysis\\firFiltering.ino"
+void setup();
+#line 29 "C:\\Users\\robbi\\repos\\emgAnalysis\\firFiltering.ino"
+void loop();
+#line 5 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingAverage.ino"
+void MAFilter_Init(MAFilter *MA);
+#line 19 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingAverage.ino"
+float MAFilter_Update(MAFilter *MA, float inp);
+#line 3 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingMaximum.ino"
+void MMFilter_Init(MMFilter *MM);
+#line 17 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingMaximum.ino"
+float MMFilter_Update(MMFilter *MM, float inp);
+#line 0 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\emgAnalysis.ino"
+
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
+#include "dataBuffer.h"
+
+void Buffer_Init(Buffer *B) {
+   /* Initialize the Buffer */
+
+   /* Clear filter buffer */
+   for (uint8_t n = 0; n < bufferLength; n++) {
+    B->buf[n] = 0.0f;
+   }
+
+   /* Reset Buffer Index */
+   B->bufIndex = 0;
+
+   /* Clear Filter Output */
+   B->out = 0.0f;
+}
+
+void Buffer_Update(Buffer *B, float data) {
+
+  /* Store latest sample in buffer */
+  B->buf[B->bufIndex] = data;
+
+  /* Increment buffer index */
+  B->bufIndex++;
+
+  if (B->bufIndex == bufferLength) {
+    B->bufIndex = 0;
+  }
+}
+
+
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\firFiltering.ino"
 #include "movingAverage.h"
 #include "movingMaximum.h"
 // #include "snr.h"
@@ -15,19 +66,6 @@ MMFilter filterMovingMax;
 
 const int pin = A0;
 
-#line 16 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
-void setup();
-#line 29 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
-void loop();
-#line 5 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino"
-void MAFilter_Init(MAFilter *MA);
-#line 19 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino"
-float MAFilter_Update(MAFilter *MA, float inp);
-#line 3 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino"
-void MMFilter_Init(MMFilter *MM);
-#line 17 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino"
-float MMFilter_Update(MMFilter *MM, float inp);
-#line 16 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
 void setup()
 {
   MAFilter_Init(&barFilterMovingAverage);
@@ -63,7 +101,7 @@ void loop()
   Serial.println(filterMovingMax.out);
 }
 
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino"
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingAverage.ino"
 #include "movingAverage.h"
 
 static float MA_IMPULSE_RESPONSE[movingAverage_LENGTH] = {0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
@@ -117,7 +155,7 @@ float MAFilter_Update(MAFilter *MA, float inp) {
 
   return MA->out;
 }
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino"
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingMaximum.ino"
 #include "movingMaximum.h"
 
 void MMFilter_Init(MMFilter *MM) {
@@ -161,7 +199,7 @@ float MMFilter_Update(MMFilter *MM, float inp) {
 
   return MM->out;
 }
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\snr.ino"
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\snr.ino"
 // #include "snr.h"
 
 // // add necessary variables for calculation

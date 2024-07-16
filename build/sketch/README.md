@@ -1,4 +1,4 @@
-#line 1 "C:\\Users\\robbi\\repos\\firFiltering\\README.md"
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\README.md"
 # EMG Signal Anaylsis
 
 Code for inputing a preamplified 0V-5V EMG signal on an Arudino, filtering and smoothing the signal, and measuring and comparing SNR.

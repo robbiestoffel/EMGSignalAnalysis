@@ -1,6 +1,6 @@
 [
  {
-  "directory": "c:\\Users\\robbi\\repos\\firFiltering",
+  "directory": "c:\\Users\\robbi\\repos\\emgAnalysis",
   "arguments": [
    "C:\\Users\\robbi\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7/bin/avr-g++",
    "-c",
@@ -23,10 +23,10 @@
    "-DARDUINO_ARCH_AVR",
    "-IC:\\Users\\robbi\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino",
    "-IC:\\Users\\robbi\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\mega",
-   "C:\\Users\\robbi\\repos\\firFiltering\\build\\sketch\\firFiltering.ino.cpp",
+   "C:\\Users\\robbi\\repos\\emgAnalysis\\build\\sketch\\emgAnalysis.ino.cpp",
    "-o",
-   "C:\\Users\\robbi\\repos\\firFiltering\\build\\sketch\\firFiltering.ino.cpp.o"
+   "C:\\Users\\robbi\\repos\\emgAnalysis\\build\\sketch\\emgAnalysis.ino.cpp.o"
   ],
-  "file": "C:\\Users\\robbi\\repos\\firFiltering\\build\\sketch\\firFiltering.ino.cpp"
+  "file": "C:\\Users\\robbi\\repos\\emgAnalysis\\build\\sketch\\emgAnalysis.ino.cpp"
  }
 ]

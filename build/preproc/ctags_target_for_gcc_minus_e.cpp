@@ -1,6 +1,37 @@
-# 1 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino"
-# 2 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino" 2
-# 3 "C:\\Users\\robbi\\repos\\firFiltering\\firFiltering.ino" 2
+# 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\emgAnalysis.ino"
+# 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
+# 2 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino" 2
+
+void Buffer_Init(Buffer *B) {
+   /* Initialize the Buffer */
+
+   /* Clear filter buffer */
+   for (uint8_t n = 0; n < 16; n++) {
+    B->buf[n] = 0.0f;
+   }
+
+   /* Reset Buffer Index */
+   B->bufIndex = 0;
+
+   /* Clear Filter Output */
+   B->out = 0.0f;
+}
+
+void Buffer_Update(Buffer *B, float data) {
+
+  /* Store latest sample in buffer */
+  B->buf[B->bufIndex] = data;
+
+  /* Increment buffer index */
+  B->bufIndex++;
+
+  if (B->bufIndex == 16) {
+    B->bufIndex = 0;
+  }
+}
+# 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\firFiltering.ino"
+# 2 "C:\\Users\\robbi\\repos\\emgAnalysis\\firFiltering.ino" 2
+# 3 "C:\\Users\\robbi\\repos\\emgAnalysis\\firFiltering.ino" 2
 // #include "snr.h"
 // #include "FIRFilter.h"
 
@@ -48,8 +79,8 @@ void loop()
   Serial.print(",");
   Serial.println(filterMovingMax.out);
 }
-# 1 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino"
-# 2 "C:\\Users\\robbi\\repos\\firFiltering\\movingAverage.ino" 2
+# 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingAverage.ino"
+# 2 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingAverage.ino" 2
 
 static float MA_IMPULSE_RESPONSE[10] = {0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
 
@@ -102,8 +133,8 @@ float MAFilter_Update(MAFilter *MA, float inp) {
 
   return MA->out;
 }
-# 1 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino"
-# 2 "C:\\Users\\robbi\\repos\\firFiltering\\movingMaximum.ino" 2
+# 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingMaximum.ino"
+# 2 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingMaximum.ino" 2
 
 void MMFilter_Init(MMFilter *MM) {
 
@@ -146,7 +177,7 @@ float MMFilter_Update(MMFilter *MM, float inp) {
 
   return MM->out;
 }
-# 1 "C:\\Users\\robbi\\repos\\firFiltering\\snr.ino"
+# 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\snr.ino"
 // #include "snr.h"
 
 // // add necessary variables for calculation

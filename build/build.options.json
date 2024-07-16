@@ -1,5 +1,5 @@
 {
-  "additionalFiles": "..\\..\\..,..\\..\\..,..\\..,..\\..,..\\..,..\\..,..\\..",
+  "additionalFiles": "..\\..\\..,..\\..\\..,..\\..,..\\..,..\\..,..\\..,..\\..,..\\..",
   "builtInToolsFolders": "",
   "compiler.optimization_flags": "",
   "customBuildProperties": "",
@@ -7,5 +7,5 @@
   "hardwareFolders": "C:\\Users\\robbi\\AppData\\Local\\Arduino15\\packages",
   "otherLibrariesFolders": "C:\\Users\\robbi\\OneDrive\\Documents\\Arduino\\libraries",
   "runtime.ide.version": "10607",
-  "sketchLocation": "C:\\Users\\robbi\\repos\\firFiltering"
+  "sketchLocation": "C:\\Users\\robbi\\repos\\emgAnalysis"
 }
