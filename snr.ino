@@ -1,51 +1,23 @@
-// #include "snr.h"
+#include "snr.h"
 
-// // add necessary variables for calculation
+float signalPower;
+float snr;
 
-// void SNR_Init(SNRCalculator *SNR) {
+float SNR_Calculate(Buffer *B) {
 
-//   /* Clear filter buffer */
-//   for (uint8_t n = 0; n < SNR_Time_Interval; n++) {
-//     SNR->buf[n] = 0.0f;
-//   }
+  // Calculate Signal Power
+  
+  signalPower = 0;
 
-//   /* Reset buffer index */
-//   SNR->bufIndex = 0;
+  for (uint8_t n = 0; n < bufferLength; n++) {
+    signalPower += ( B->buf[n] * B->buf[n] );
+  }
 
-//   /* Clear filter output */
-//   SNR->out = 0.0f;
-// }
+  signalPower = signalPower / bufferLength;
 
-// float SNR_Calculate(SNRCalculator *SNR, float data) {
+  // Calculate Signal-to-noise ratio
 
-//   // temp buffer the data
-//   SNR->buf[SNR->bufIndex] = data;
+  snr = 10 * log( signalPower / noisePower );
 
-//   // Increase buffer index if necessary
-//   SNR->bufIndex++;
-
-//   if (SNR->bufIndex == SNR_Time_Interval) {
-//     SNR->bufIndex = 0;
-//   }
-
-//   // used the currently buffered data to calculate P_signal
-//   SNR->out = 0.0f;
-
-//   uint8_t sumIndex = SNR->bufIndex;
-
-//   for (uint8_t n = 0; n < SNR_Time_Interval; n++) {
-
-//     if (sumIndex > 0) {
-//       sumIndex--;
-//     } else {
-//       sumIndex = SNR_Time_Interval - 1;
-//     }
-
-//     // now actually do the calculation
-//   }
-
-//   // import in P_noise and use both values to calculate SNR
-
-//   // log SNR values, and buffer snr elsewhere to be averaged later?
-
-// }
+  return snr;
+}
