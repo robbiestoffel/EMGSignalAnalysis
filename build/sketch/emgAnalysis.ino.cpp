@@ -1,23 +1,67 @@
 #include <Arduino.h>
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\emgAnalysis.ino"
+#include "dataBuffer.h"
+#include "movingCalculations.h"
+#include "snr.h"
+
+Buffer dataBuffer;
+Buffer maxBuffer;
+// Buffer snrAverage;
+// Buffer snrMaximum;
+
+const uint8_t pin = A0;
+int data = 0;
+
+float ma;
+float mm;
+// float ma_snr;
+// float mm_snr;
+
+#line 18 "C:\\Users\\robbi\\repos\\emgAnalysis\\emgAnalysis.ino"
+void setup();
+#line 28 "C:\\Users\\robbi\\repos\\emgAnalysis\\emgAnalysis.ino"
+void loop();
 #line 3 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
 void Buffer_Init(Buffer *B);
-#line 18 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
+#line 15 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
 void Buffer_Update(Buffer *B, float data);
-#line 16 "C:\\Users\\robbi\\repos\\emgAnalysis\\firFiltering.ino"
-void setup();
-#line 29 "C:\\Users\\robbi\\repos\\emgAnalysis\\firFiltering.ino"
-void loop();
-#line 5 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingAverage.ino"
-void MAFilter_Init(MAFilter *MA);
-#line 19 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingAverage.ino"
-float MAFilter_Update(MAFilter *MA, float inp);
-#line 3 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingMaximum.ino"
-void MMFilter_Init(MMFilter *MM);
-#line 17 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingMaximum.ino"
-float MMFilter_Update(MMFilter *MM, float inp);
-#line 0 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
-#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\emgAnalysis.ino"
+#line 3 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingCalculations.ino"
+float movingAverage(Buffer *B);
+#line 26 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingCalculations.ino"
+float movingMaximum(Buffer *B);
+#line 6 "C:\\Users\\robbi\\repos\\emgAnalysis\\snr.ino"
+float SNR_Calculate(Buffer *B);
+#line 18 "C:\\Users\\robbi\\repos\\emgAnalysis\\emgAnalysis.ino"
+void setup() {
+  Serial.begin(115200);
 
+  /* Reset Buffer */
+  Buffer_Init(&dataBuffer);
+  Buffer_Init(&maxBuffer);
+  // Buffer_Init(&snrAverage);
+  // Buffer_Init(&snrMaximum);
+}
+
+void loop() {
+  /* Keep buffer filled with the latest data */
+  data = analogRead(pin);
+
+  Buffer_Update(&dataBuffer, data);
+  mm = movingMaximum(&dataBuffer);
+  
+  Buffer_Update(&maxBuffer, mm);
+  ma = movingAverage(&maxBuffer);
+
+  // Buffer_Update(&snrAverage, ma);
+  // Buffer_Update(&snrMaximum, mm);
+  
+  // ma_snr = SNR_Calculate(&snrAverage);
+  // mm_snr = SNR_Calculate(&snrMaximum);
+
+  Serial.print(data);
+  Serial.print(",");
+  Serial.println(ma);
+}
 #line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\dataBuffer.ino"
 #include "dataBuffer.h"
 
@@ -31,9 +75,6 @@ void Buffer_Init(Buffer *B) {
 
    /* Reset Buffer Index */
    B->bufIndex = 0;
-
-   /* Clear Filter Output */
-   B->out = 0.0f;
 }
 
 void Buffer_Update(Buffer *B, float data) {
@@ -50,204 +91,67 @@ void Buffer_Update(Buffer *B, float data) {
 }
 
 
-#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\firFiltering.ino"
-#include "movingAverage.h"
-#include "movingMaximum.h"
-// #include "snr.h"
-// #include "FIRFilter.h"
+#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingCalculations.ino"
+#include "movingCalculations.h"
 
-MAFilter barFilterMovingAverage;
-MAFilter secondMA;
-MAFilter thirdMA;
+float movingAverage(Buffer *B) {
+  MAout = 0.0f;
 
-MMFilter filterMovingMax;
+  uint8_t sumIndex = B->bufIndex;
 
-// FIRFilter lpfAcc;
-
-const int pin = A0;
-
-void setup()
-{
-  MAFilter_Init(&barFilterMovingAverage);
-  MAFilter_Init(&secondMA);
-  MAFilter_Init(&thirdMA);
-
-  MMFilter_Init(&filterMovingMax);
-
-  // FIRFilter_Init(&lpfAcc);
-
-  Serial.begin(115200);
-}
-
-void loop()
-{
-  /* Get Data */
-  int data = analogRead(pin);
-
-  /* Filter data */
-  // MAFilter_Update(&barFilterMovingAverage, data);
-  // MAFilter_Update(&secondMA, barFilterMovingAverage.out);
-  // MAFilter_Update(&thirdMA, secondMA.out);
-
-  MMFilter_Update(&filterMovingMax, data);
-
-  /* Log raw and filtered data via Serial */
-  Serial.print(data);
-  // Serial.print(",");
-  // Serial.print(barFilterMovingAverage.out);
-  // Serial.print(",");
-  // Serial.print(secondMA.out);
-  Serial.print(",");
-  Serial.println(filterMovingMax.out);
-}
-
-#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingAverage.ino"
-#include "movingAverage.h"
-
-static float MA_IMPULSE_RESPONSE[movingAverage_LENGTH] = {0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f};
-
-void MAFilter_Init(MAFilter *MA) {
-
-  /* Clear filter buffer */
-  for (uint8_t n = 0; n < movingAverage_LENGTH; n++) {
-    MA->buf[n] = 0.0f;
-  }
-
-  /* Reset buffer index */
-  MA->bufIndex = 0;
-
-  /* Clear filter output */
-  MA->out = 0.0f;
-}
-
-float MAFilter_Update(MAFilter *MA, float inp) {
-
-  /* Store latest sample in buffer */
-  MA->buf[MA->bufIndex] = inp;
-
-  /* Increment buffer index and wrap around if necessary */
-  MA->bufIndex++;
-
-  if (MA->bufIndex == movingAverage_LENGTH) {
-    MA->bufIndex = 0;
-  }
-
-  /* Compute new output sample (via convolution) */
-  MA->out = 0.0f;
-
-  uint8_t sumIndex = MA->bufIndex;
-
-  for (uint8_t n = 0; n < movingAverage_LENGTH; n++) {
+  for (uint8_t n = 0; n < bufferLength; n++) {
 
     /* Decrease index and wrap if necessary */
     if (sumIndex > 0) {
       sumIndex--;
     } else {
-      sumIndex = movingAverage_LENGTH - 1;
+      sumIndex = bufferLength - 1;
     }
 
-    /* Multiply impulse response with shifted input sample and add to output */
-    MA->out += MA_IMPULSE_RESPONSE[n] * MA->buf[sumIndex];
+    /* Convolution in parts */
+    MAout += 0.0625 * B->buf[sumIndex];
 
   }
 
   /* Return Filtered Output */
-
-  return MA->out;
-}
-#line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\movingMaximum.ino"
-#include "movingMaximum.h"
-
-void MMFilter_Init(MMFilter *MM) {
-
-  /* Clear filter buffer */
-  for (uint8_t n = 0; n < movingMaximum_LENGTH; n++) {
-    MM->buf[n] = 0.0f;
-  }
-
-  /* Reset buffer index */
-  MM->bufIndex = 0;
-
-  /* Clear filter output */
-  MM->out = 0.0f;
+  return MAout;
 }
 
-float MMFilter_Update(MMFilter *MM, float inp) {
+float movingMaximum(Buffer *B) {
+  MMout = 0.0f;
+  
 
-  /* Store latest sample in buffer */
-  MM->buf[MM->bufIndex] = inp;
-
-  /* Increment buffer index and wrap around if necessary */
-  MM->bufIndex++;
-
-  if (MM->bufIndex == movingMaximum_LENGTH) {
-    MM->bufIndex = 0;
-  }
-
-  /* Compute new output sample */
-  MM->out = 0.0f;
-
-  for (int m = 0 ; m < movingMaximum_LENGTH ; m++)
-  {
-    if (MM->buf[m] > MM->out)
-    {
-      MM->out = MM->buf[m];
+  /* Calculate Maximum */
+  for (uint8_t n = 0; n < bufferLength; n++) {
+    if (B->buf[n] > MMout) {
+      MMout = B->buf[n];
     }
   }
 
   /* Return Filtered Output */
-
-  return MM->out;
+  return MMout;
 }
 #line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\snr.ino"
-// #include "snr.h"
+#include "snr.h"
 
-// // add necessary variables for calculation
+float signalPower;
+float snr;
 
-// void SNR_Init(SNRCalculator *SNR) {
+float SNR_Calculate(Buffer *B) {
 
-//   /* Clear filter buffer */
-//   for (uint8_t n = 0; n < SNR_Time_Interval; n++) {
-//     SNR->buf[n] = 0.0f;
-//   }
+  // Calculate Signal Power
+  
+  signalPower = 0;
 
-//   /* Reset buffer index */
-//   SNR->bufIndex = 0;
+  for (uint8_t n = 0; n < bufferLength; n++) {
+    signalPower += ( B->buf[n] * B->buf[n] );
+  }
 
-//   /* Clear filter output */
-//   SNR->out = 0.0f;
-// }
+  signalPower = signalPower / bufferLength;
 
-// float SNR_Calculate(SNRCalculator *SNR, float data) {
+  // Calculate Signal-to-noise ratio
 
-//   // temp buffer the data
-//   SNR->buf[SNR->bufIndex] = data;
+  snr = 10 * log( signalPower / noisePower );
 
-//   // Increase buffer index if necessary
-//   SNR->bufIndex++;
-
-//   if (SNR->bufIndex == SNR_Time_Interval) {
-//     SNR->bufIndex = 0;
-//   }
-
-//   // used the currently buffered data to calculate P_signal
-//   SNR->out = 0.0f;
-
-//   uint8_t sumIndex = SNR->bufIndex;
-
-//   for (uint8_t n = 0; n < SNR_Time_Interval; n++) {
-
-//     if (sumIndex > 0) {
-//       sumIndex--;
-//     } else {
-//       sumIndex = SNR_Time_Interval - 1;
-//     }
-
-//     // now actually do the calculation
-//   }
-
-//   // import in P_noise and use both values to calculate SNR
-
-//   // log SNR values, and buffer snr elsewhere to be averaged later?
-
-// }
+  return snr;
+}

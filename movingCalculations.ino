@@ -15,7 +15,7 @@ float movingAverage(Buffer *B) {
     }
 
     /* Convolution in parts */
-    MAout += ( 1 / bufferLength ) * B->buf[sumIndex];
+    MAout += 0.0625 * B->buf[sumIndex];
 
   }
 
@@ -25,11 +25,12 @@ float movingAverage(Buffer *B) {
 
 float movingMaximum(Buffer *B) {
   MMout = 0.0f;
+  
 
   /* Calculate Maximum */
   for (uint8_t n = 0; n < bufferLength; n++) {
     if (B->buf[n] > MMout) {
-      MAout = B->buf[n];
+      MMout = B->buf[n];
     }
   }
 

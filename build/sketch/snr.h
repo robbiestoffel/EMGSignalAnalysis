@@ -1,28 +1,17 @@
 #line 1 "C:\\Users\\robbi\\repos\\emgAnalysis\\snr.h"
-// /* Header Code + Definitions (I think??) */
+/* Header Code + Definitions (I think??) */
 
-// #ifndef SNR_H
-// #define SNR_H
+#ifndef SNR_H
+#define SNR_H
 
-// #include <stdint.h>
+#include <stdint.h>
+#include "dataBuffer.h"
 
-// // Time Interval
-// #define SNR_Time_Interval 10
+// Predetermined Noise Power
+// Calculating this will need to be automated in the future
+// Currently and Arbitary value (10)
+#define noisePower 10
 
-// // Predetermined Noise Power
-// // Calculating this will need to be automated in the future
-// // Currently and Arbitary value (10)
-// #define P_noise 10
+float SNR_Calculate(Buffer *B);
 
-// typedef struct {
-//   // information needed to be kept track of to calc snr
-//   float buf[SNR_Time_Interval];
-//   uint8_t bufIndex;
-
-//   float out;
-// } SNRCalculator;
-
-// void SNR_Init(SNRCalculator *SNR);
-// float SNR_Calculate(SNRCalculator *SNR, float data);
-
-// #endif
+#endif
